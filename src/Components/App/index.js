@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { withFirebase } from '../Firebase';
-import { AuthUserContext } from '../Session';
 import { 
     BrowserRouter as Router,
     Route
