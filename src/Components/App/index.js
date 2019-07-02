@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { withFirebase } from '../Firebase';
+import { AuthUserContext } from '../Session';
 import { 
     BrowserRouter as Router,
     Route
 } from 'react-router-dom';
+import { compose } from 'recompose';
 
 import Navigation from '../Navigation';
 import LandingPage from '../Landing';
@@ -15,23 +17,12 @@ import AccountPage from '../Account';
 import AdminPage from '../Admin';
 
 import * as ROUTES from '../../Constants/routes';
+import { withAuthentication } from '../Session';
 
-const App = (props) => {
-    const [authUser, setAuthUser] = useState(null);
-
-    useEffect(()=>{
-        const listener = props.firebase.auth.onAuthStateChanged(authUser =>{
-            authUser ? setAuthUser(authUser) : setAuthUser(null);
-        });
-
-        return () => {
-            listener();
-        }
-    });
-
+const AppBase = () => {
     return(
         <Router>
-            <Navigation authUser={authUser}/>
+            <Navigation />
             
             <hr />
 
@@ -46,4 +37,9 @@ const App = (props) => {
     );
 };
 
-export default withFirebase(App);
+const App = compose(
+    withFirebase,
+    withAuthentication
+)(AppBase);
+
+export default App;

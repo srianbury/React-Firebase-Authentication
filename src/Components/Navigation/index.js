@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
+import { AuthUserContext } from '../Session'; 
 import SignOutButton from '../SignOut';
 import * as ROUTES from '../../Constants/routes';
 
-const Navigation = ({ authUser }) => (
-    <div>{authUser ? <NavigationAuth /> : <NavigationNonAuth />}</div>
-);
+const Navigation = () => {
+    const authUser = useContext(AuthUserContext);
+
+    return(
+        <>{authUser ? <NavigationAuth /> : <NavigationNonAuth />}</>
+    );
+};
 
 const NavigationAuth = () => (
     <ul>
