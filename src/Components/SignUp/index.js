@@ -1,10 +1,12 @@
-import React, { useReducer, useState, useEffect } from 'react';
+import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { SignInLink } from '../SignIn';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../Constants/routes';
+import { useForm } from '../../Hooks';
+
 
 const SignUpPage = () => (
     <div>
@@ -14,62 +16,23 @@ const SignUpPage = () => (
     </div>
 );
 
-const initialForm = {
-    username: '',
-    email: '',
-    passwordOne: '',
-    passwordTwo: '',
-    error: null
-};
-function formReducer(state, action){
-    switch(action.type){
-        case 'UPDATE':
-            return { ...state, ...action.payload };
-        case 'RESET':
-            return initialForm;
-        default:
-            return state;
-    }
-}
 
 const SignUpFormBase = (props) => {
-    const [formData, dispatch] = useReducer(formReducer, initialForm);
-    const [isInvalid, setIsInvalid] = useState(true);
-
-    useEffect(()=>{
-        if(
-            formData.email!==''
-            && formData.username!==''
-            && formData.passwordOne!==''
-            && formData.passwordOne===formData.passwordTwo){
-                setIsInvalid(false);
-            } 
-        else if(!isInvalid){ //only set back to false if it was true and needs to be changed
-            setIsInvalid(true);
-        }
-    }, [formData, isInvalid]);
+    const [formData, dispatch, reset] = useForm(initialForm);
 
     function handleSubmit(event){
-        const { username, email, passwordOne } = formData;
+        const { email, passwordOne } = formData; //username
         props.firebase.doCreateUserWithEmailAndPassword(email, passwordOne)
         .then(authUser => {
-            dispatch({
-                type:'RESET'
-            });
+            reset();
             props.history.push(ROUTES.HOME);
         }).catch(error=>{
-            dispatch({
-                type: 'UPDATE',
-                payload: { error }
-            });
+            dispatch({ error });
         });
     }
 
     function handleChange(event){
-        dispatch({
-            type: 'UPDATE',
-            payload: { [event.target.name]:event.target.value }
-        });
+        dispatch({ [event.target.name]: event.target.value });
     }
 
     return(
@@ -101,23 +64,33 @@ const SignUpFormBase = (props) => {
                 placeholder='Confirm Password' />
             <button
                 onClick={handleSubmit}
-                disabled={isInvalid}
-                type='submit' >
+                disabled={!formData.username || !formData.email || !formData.passwordOne || formData.passwordOne!==formData.passwordTwo} >
                 Sign Up
             </button>
         </div>
     );
 }
+const initialForm = {
+    username: '',
+    email: '',
+    passwordOne: '',
+    passwordTwo: '',
+    error: null
+};
+
 
 const SignUpLink = () => (
     <p>
         Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
     </p>
 );
+
+
 const SignUpForm = compose(
     withRouter,
     withFirebase
 )(SignUpFormBase);
+
 
 export default SignUpPage;
 export { SignUpForm,  SignUpLink };
