@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 
 import * as ROUTES from '../../Constants/routes';
-
+import AuthUserContext from './context';
 
 const withAuthorization = Component => props => {
+    const authUser = useContext(AuthUserContext);
+
     useEffect(()=>{
         const listener = props.firebase.auth.onAuthStateChanged(
             authUser => {
@@ -17,7 +19,9 @@ const withAuthorization = Component => props => {
         }
     });
     return(
-        <Component {...props} />
+        <>
+            {condition(authUser) && <Component {...props} />}
+        </>
     );
 }
 const condition = authUser => !!authUser;

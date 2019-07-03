@@ -6,7 +6,7 @@ import { withFirebase } from '../Firebase';
 import { withAuthorization } from '../Session';
 
 
-const HomeBase = (props) => (
+const HomeBase = () => (
     <div>
         <h1>Home</h1>
         <p>The Home Page is accessible by signed in users.</p>
