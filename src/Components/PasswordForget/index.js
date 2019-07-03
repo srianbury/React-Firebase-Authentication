@@ -1,8 +1,9 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../Constants/routes';
+import { useForm } from '../../Hooks';
 
 const PasswordForgetPage = () => (
     <div>
@@ -11,55 +12,23 @@ const PasswordForgetPage = () => (
     </div>
 );
 
-const initialForm = {
-    email: '',
-    error: null
-};
-function formReducer(state, action){
-    switch(action.type){
-        case 'UPDATE':
-            return { ...state, ...action.payload };
-        case 'RESET':
-            return initialForm;
-        default:
-            return state;
-    }
-}
 
 const PasswordForgetFormBase = (props) => {
-    const [formData, dispatch] = useReducer(formReducer, initialForm);
-    const [isInvalid, setIsInvalid] = useState(true);
-
-    useEffect(()=>{
-        if(formData.email!==''){
-            setIsInvalid(false);
-        }
-        else if(!isInvalid){
-            setIsInvalid(true);
-        }
-    },[formData, isInvalid]);
+    const [formData, dispatch, reset] = useForm(initialForm);
 
     function handleSubmit(){
         const { email } = formData;
         props.firebase.doPasswordReset(email)
         .then(()=>{
-            dispatch({
-                type:'RESET'
-            });
+            reset();
         })
         .catch(error=>{
-            dispatch({
-                type:'UPDATE',
-                payload:{ error }
-            });
+            dispatch({ error });
         });
     }
 
     function handleChange(event){
-        dispatch({
-            type: 'UPDATE',
-            payload: { [event.target.name]:event.target.value }
-        });
+        dispatch({ [event.target.name]:event.target.value });
     }
 
     return(
@@ -73,12 +42,16 @@ const PasswordForgetFormBase = (props) => {
                 placeholder='Email Address' />
             <button
                 onClick={handleSubmit}
-                disabled={isInvalid}
+                disabled={!formData.email}
                 type='submit' >
                 Reset Password
             </button>
         </div>
     );
+};
+const initialForm = {
+    email: '',
+    error: null
 };
 
 
@@ -88,8 +61,9 @@ const PasswordForgetLink = () => (
     </p>
 );
 
-export default PasswordForgetPage;
 
 const PasswordForgetForm = withFirebase(PasswordForgetFormBase);
 
+
+export default PasswordForgetPage;
 export { PasswordForgetForm, PasswordForgetLink };

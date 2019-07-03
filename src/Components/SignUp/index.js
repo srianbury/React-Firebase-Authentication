@@ -20,7 +20,7 @@ const SignUpPage = () => (
 const SignUpFormBase = (props) => {
     const [formData, dispatch, reset] = useForm(initialForm);
 
-    function handleSubmit(event){
+    function handleSubmit(){
         const { email, passwordOne } = formData; //username
         props.firebase.doCreateUserWithEmailAndPassword(email, passwordOne)
         .then(authUser => {
