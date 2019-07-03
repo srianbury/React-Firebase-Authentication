@@ -15,7 +15,7 @@ const withAuthentication = Component => props => {
         return () => {
             listener();
         }
-    });
+    }, []);
 
 
     return(

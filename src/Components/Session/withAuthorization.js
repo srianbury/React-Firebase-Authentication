@@ -17,7 +17,7 @@ const withAuthorization = Component => props => {
         return () => {
             listener();
         }
-    });
+    }, []);
     return(
         <>
             {condition(authUser) && <Component {...props} />}

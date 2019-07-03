@@ -21,12 +21,21 @@ const SignUpFormBase = (props) => {
     const [formData, dispatch, reset] = useForm(initialForm);
 
     function handleSubmit(){
-        const { email, passwordOne } = formData; //username
+        const { username, email, passwordOne } = formData; 
         props.firebase.doCreateUserWithEmailAndPassword(email, passwordOne)
         .then(authUser => {
+            return props.firebase
+            .user(authUser.user.uid)
+            .set({
+                username,
+                email
+            });
+        })
+        .then(()=>{
             reset();
             props.history.push(ROUTES.HOME);
-        }).catch(error=>{
+        })
+        .catch(error=>{
             dispatch({ error });
         });
     }
