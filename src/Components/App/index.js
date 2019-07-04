@@ -17,7 +17,7 @@ import AdminPage from '../Admin';
 import * as ROUTES from '../../Constants/routes';
 import { withAuthentication } from '../Session';
 
-const AppBase = () => {
+const App = () => {
     return(
         <Router>
             <Navigation />
@@ -34,9 +34,5 @@ const AppBase = () => {
         </Router>
     );
 };
-
-const App = compose(
-    withAuthentication
-)(AppBase);
 
 export default App;
