@@ -5,7 +5,10 @@ const useForm = initialForm => {
     const reset = () => {
         dispatch(initialForm);
     }
-    return [formData, dispatch, reset];
+    const handleChange = (event) => {
+        dispatch({ [event.target.name]:event.target.value });
+    }
+    return [formData, dispatch, handleChange, reset];
 }
 
 function formReducer(state, newState){

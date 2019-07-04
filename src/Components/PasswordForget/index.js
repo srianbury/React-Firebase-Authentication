@@ -14,7 +14,7 @@ const PasswordForgetPage = () => (
 
 
 const PasswordForgetFormBase = () => {
-    const [formData, dispatch, reset] = useForm(initialForm);
+    const [formData, dispatch, handleChange, reset] = useForm(initialForm);
     const firebase = useContext(FirebaseContext);
 
     function handleSubmit(){
@@ -26,10 +26,6 @@ const PasswordForgetFormBase = () => {
         .catch(error=>{
             dispatch({ error });
         });
-    }
-
-    function handleChange(event){
-        dispatch({ [event.target.name]:event.target.value });
     }
 
     return(

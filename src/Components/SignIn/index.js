@@ -20,10 +20,10 @@ const SignInPage = () => (
 
 
 const SignInFormBase = ({ history }) => {
-    const [formData, dispatch, reset] = useForm(initialForm);
+    const [formData, dispatch, handleChange, reset] = useForm(initialForm);
     const firebase = useContext(FirebaseContext);
 
-    function handleSubmit(event){
+    function handleSubmit(){
         const { email, password } = formData;
         firebase.doSignInWithEmailAndPassword(email, password)
         .then(()=>{
@@ -33,10 +33,6 @@ const SignInFormBase = ({ history }) => {
         .catch(error => {
             dispatch({ error });
         });
-    }
-
-    function handleChange(event){
-        dispatch({ [event.target.name]:event.target.value });
     }
 
     return(

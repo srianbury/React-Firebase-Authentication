@@ -18,7 +18,7 @@ const SignUpPage = () => (
 
 
 const SignUpFormBase = ({ history }) => {
-    const [formData, dispatch, reset] = useForm(initialForm);
+    const [formData, dispatch, handleChange, reset] = useForm(initialForm);
     const firebase = useContext(FirebaseContext);    
 
     function handleSubmit(){
@@ -39,10 +39,6 @@ const SignUpFormBase = ({ history }) => {
         .catch(error=>{
             dispatch({ error });
         });
-    }
-
-    function handleChange(event){
-        dispatch({ [event.target.name]: event.target.value });
     }
 
     return(
