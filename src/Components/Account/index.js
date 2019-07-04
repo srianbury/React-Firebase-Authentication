@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import  { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { PasswordForgetForm } from '../PasswordForget';
 import PasswordChangeForm from '../PasswordChange';
-import { withAuthorization, useAuthentication } from '../Session';
+import { withAuthorization, AuthUserContext } from '../Session';
 
 
 const AccountPageBase = () => {
-    const authUser = useAuthentication();
+    const authUser = useContext(AuthUserContext);
     return(
         <div>
-            <h1>Account Page {authUser ? authUser.email : ''}</h1>
+            <h1>Account Page {authUser.email}</h1>
             <PasswordForgetForm />  
             <PasswordChangeForm />
         </div>

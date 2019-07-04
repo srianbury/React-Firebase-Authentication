@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { 
     BrowserRouter as Router,
     Route,
@@ -16,8 +16,10 @@ import AdminPage from '../Admin';
 import NoMatch from '../404';
 
 import * as ROUTES from '../../Constants/routes';
+import { FirebaseContext } from '../Firebase';
+import { AuthUserContext } from '../Session';
 
-const App = () => {
+const AppBase = () => {
     return(
         <Router>
             <Navigation />
@@ -37,5 +39,27 @@ const App = () => {
         </Router>
     );
 };
+
+
+const App = () => {
+    const [authUser, setAuthUser] = useState(null);
+    const firebase = useContext(FirebaseContext);
+
+    useEffect(()=>{
+        const unlisten = firebase.auth.onAuthStateChanged(authUser => {
+            authUser ? setAuthUser(authUser) : setAuthUser(null);
+        });
+
+        return () => {
+            unlisten();
+        }
+    });
+
+    return(
+        <AuthUserContext.Provider value={authUser}>
+            <AppBase />
+        </AuthUserContext.Provider>
+    );
+}
 
 export default App;

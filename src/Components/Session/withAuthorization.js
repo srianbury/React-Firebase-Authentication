@@ -1,13 +1,13 @@
 import React, { useEffect, useContext } from 'react';
 
 import * as ROUTES from '../../Constants/routes';
-import { useAuthentication } from './withAuthentication'; 
 import { FirebaseContext } from '../Firebase';
+import { AuthUserContext } from '.';
 
 
 const withAuthorization = condition => Component => ({ history, ...rest }) => {
     const firebase = useContext(FirebaseContext);
-    const authUser = useAuthentication(); //useContext(AuthUserContext);
+    const authUser = useContext(AuthUserContext); //useContext(AuthUserContext);
 
     useEffect(()=>{
         const listener = firebase.auth.onAuthStateChanged(
