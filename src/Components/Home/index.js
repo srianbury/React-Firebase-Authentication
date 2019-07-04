@@ -13,10 +13,10 @@ const HomeBase = () => (
     </div>
 );
 
-
+const condition = authUser => !!authUser;
 const Home = compose(
     withRouter,
-    withAuthorization
+    withAuthorization(condition)
 )(HomeBase);
 
 export default Home;

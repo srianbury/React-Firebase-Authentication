@@ -18,9 +18,10 @@ const AccountPageBase = () => {
     );
 };
 
+const condition = authUser => !!authUser;
 const AccountPage = compose(
     withRouter,
-    withAuthorization
+    withAuthorization(condition)
 )(AccountPageBase);
 
 

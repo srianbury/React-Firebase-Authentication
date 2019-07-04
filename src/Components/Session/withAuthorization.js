@@ -5,7 +5,7 @@ import { useAuthentication } from './withAuthentication';
 import { FirebaseContext } from '../Firebase';
 
 
-const withAuthorization = Component => ({ history, ...rest }) => {
+const withAuthorization = condition => Component => ({ history, ...rest }) => {
     const firebase = useContext(FirebaseContext);
     const authUser = useAuthentication(); //useContext(AuthUserContext);
 
@@ -29,7 +29,5 @@ const withAuthorization = Component => ({ history, ...rest }) => {
         </>
     );
 }
-const condition = authUser => !!authUser;
-
 
 export default withAuthorization;
