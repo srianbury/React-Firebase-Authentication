@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React from 'react';
 
-import AuthUserContext from './context';
 import { FirebaseContext } from '../Firebase';
 
 const useAuthentication = () => {
-    const [authUser, setAuthUser] = useState(null);
-    const firebase = useContext(FirebaseContext);
+    const [authUser, setAuthUser] = React.useState(null);
+    const firebase = React.useContext(FirebaseContext);
 
-    useEffect(()=>{
+    React.useEffect(()=>{
         const unlisten = firebase.auth.onAuthStateChanged(authUser => {
             authUser ? setAuthUser(authUser) : setAuthUser(null);
         });
@@ -15,6 +14,9 @@ const useAuthentication = () => {
         return () => {
             unlisten();
         }
+        
+    // one timer render, no deps needed
+    // eslint-disable-next-line
     }, []);
 
     return authUser;

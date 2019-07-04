@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { AuthUserContext, useAuthentication } from '../Session'; 
+import { useAuthentication } from '../Session'; 
 import SignOutButton from '../SignOut';
 import * as ROUTES from '../../Constants/routes';
 

@@ -26,6 +26,8 @@ const AdminPage = () => {
         return () => {
             firebase.users().off();
         }
+    // one timer render, no props needed
+    // eslint-disable-next-line
     }, []);
     return(
         <div>

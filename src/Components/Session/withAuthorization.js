@@ -1,14 +1,13 @@
 import React, { useEffect, useContext } from 'react';
 
 import * as ROUTES from '../../Constants/routes';
-import AuthUserContext from './context';
 import { useAuthentication } from './withAuthentication'; 
 import { FirebaseContext } from '../Firebase';
 
 
 const withAuthorization = Component => ({ history, ...rest }) => {
     const firebase = useContext(FirebaseContext);
-    const authUser = useAuthentication(firebase); //useContext(AuthUserContext);
+    const authUser = useAuthentication(); //useContext(AuthUserContext);
 
     useEffect(()=>{
         const listener = firebase.auth.onAuthStateChanged(
@@ -21,6 +20,8 @@ const withAuthorization = Component => ({ history, ...rest }) => {
         return () => {
             listener();
         }
+    // one timer render, no deps needed
+    // eslint-disable-next-line
     }, []);
     return(
         <>
@@ -29,5 +30,6 @@ const withAuthorization = Component => ({ history, ...rest }) => {
     );
 }
 const condition = authUser => !!authUser;
+
 
 export default withAuthorization;
