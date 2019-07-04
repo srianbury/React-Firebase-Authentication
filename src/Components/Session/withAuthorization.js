@@ -15,6 +15,9 @@ const withAuthorization = condition => Component => ({ history, ...rest }) => {
                 if(!condition(authUser)){
                     history.push(ROUTES.SIGN_IN);
                 }
+            },
+            ()=>{
+                history.push(ROUTES.SIGN_IN);
             }
         );
         return () => {

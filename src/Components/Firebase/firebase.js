@@ -12,36 +12,64 @@ const config = {
 };
 
 class Firebase {
-    constructor(){
+    constructor() {
         app.initializeApp(config);
         this.auth = app.auth();
         this.db = app.database();
     }
 
     /* AUTH API */
-    doCreateUserWithEmailAndPassword = (email, password) => 
+    doCreateUserWithEmailAndPassword = (email, password) =>
         this.auth.createUserWithEmailAndPassword(email, password);
-    
+
 
     doSignInWithEmailAndPassword = (email, password) =>
         this.auth.signInWithEmailAndPassword(email, password);
 
     //we do not need to pass in anything because firebase will already know who is signed in
-    doSignOut = () => 
+    doSignOut = () =>
         this.auth.signOut();
 
-    doPasswordReset = email => 
+    doPasswordReset = email =>
         this.auth.sendPasswordResetEmail(email);
 
     doPasswordUpdate = password =>
         this.auth.currentUser.updatePassword(password);
 
     /* DB API */
-    user = uid => 
+    user = uid =>
         this.db.ref(`users/${uid}`);
 
-    users = () => 
+    users = () =>
         this.db.ref('users');
+
+    /* Merge Auth and DB User*/
+    onAuthUserListener = (next, fallback) =>
+        this.auth.onAuthStateChanged(authUser => {
+            if (authUser) {
+                this.user(authUser.uid)
+                    .once('value')
+                    .then(snapshot => {
+                        const dbUser = snapshot.val();
+
+                        // default empty roles
+                        if (!dbUser.roles) {
+                            dbUser.roles = {};
+                        }
+
+                        // merge auth and db user
+                        authUser = {
+                            uid: authUser.uid,
+                            email: authUser.email,
+                            ...dbUser,
+                        };
+
+                        next(authUser);
+                    });
+            } else {
+                fallback();
+            }
+        });
 }
 
 export default Firebase;

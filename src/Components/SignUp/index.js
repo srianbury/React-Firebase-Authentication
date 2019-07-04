@@ -22,7 +22,7 @@ const SignUpFormBase = ({ history }) => {
     const firebase = useContext(FirebaseContext);    
 
     function handleSubmit(){
-        const { username, email, passwordOne } = formData; 
+        const { username, email, passwordOne } = formData;
         firebase.doCreateUserWithEmailAndPassword(email, passwordOne)
         .then(authUser => {
             return firebase
