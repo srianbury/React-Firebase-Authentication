@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 
 import AuthUserContext from './context';
+import { FirebaseContext } from '../Firebase';
+
 
 
 const withAuthentication = Component => props => {
     const [authUser, setAuthUser] = useState(null);
+    const firebase = useContext(FirebaseContext);
 
     useEffect(()=>{
-        const listener = props.firebase.auth.onAuthStateChanged(authU => {
+        const listener = firebase.auth.onAuthStateChanged(authU => {
             authU ? setAuthUser(authU) : setAuthUser(null);
         });
 

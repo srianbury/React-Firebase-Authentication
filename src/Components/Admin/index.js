@@ -1,9 +1,12 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useContext } from 'react';
 
-import { withFirebase } from '../Firebase';
+import { FirebaseContext } from '../Firebase';
 
-const AdminPage = ({ firebase }) => {
+
+const AdminPage = () => {
     const [data, dispatch] = useReducer(reducer, initialData);
+    const firebase = useContext(FirebaseContext);
+
     useEffect(()=>{
         dispatch({
             loading: true
@@ -38,7 +41,6 @@ const initialData = {
     users: []
 };
 function reducer(state, newState){
-    console.log('reducing')
     return { ...state, ...newState };
 }
 
@@ -61,4 +63,4 @@ const UserList = ({ users, }) => (
     </ul>
 );
 
-export default withFirebase(AdminPage);
+export default AdminPage;

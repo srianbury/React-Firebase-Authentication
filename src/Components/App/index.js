@@ -1,5 +1,4 @@
 import React from 'react';
-import { withFirebase } from '../Firebase';
 import { 
     BrowserRouter as Router,
     Route
@@ -37,7 +36,6 @@ const AppBase = () => {
 };
 
 const App = compose(
-    withFirebase,
     withAuthentication
 )(AppBase);
 

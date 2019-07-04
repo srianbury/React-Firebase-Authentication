@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import  { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { withFirebase } from '../Firebase';
 import { PasswordForgetForm } from '../PasswordForget';
 import PasswordChangeForm from '../PasswordChange';
 import { AuthUserContext, withAuthorization } from '../Session';
@@ -22,8 +21,7 @@ const AccountPageBase = () => {
 
 const AccountPage = compose(
     withRouter,
-    withFirebase,
-    withAuthorization,
+    withAuthorization
 )(AccountPageBase);
 
 

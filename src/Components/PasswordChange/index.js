@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-import { withFirebase } from '../Firebase';
 import { useForm } from '../../Hooks';
+import { FirebaseContext } from '../Firebase';
 
-const PasswordChangeForm = (props) => {
+
+const PasswordChangeForm = () => {
     const [formData, dispatch, reset] = useForm(initialForm);
+    const firebase = useContext(FirebaseContext);
+
     function handleSubmit(){
         const { passwordOne } = formData;
 
-        props.firebase
+        firebase
             .doPasswordUpdate(passwordOne)
             .then(() => {
                 reset();
@@ -52,4 +55,4 @@ const initialForm = {
 };
 
 
-export default withFirebase(PasswordChangeForm);
+export default PasswordChangeForm;

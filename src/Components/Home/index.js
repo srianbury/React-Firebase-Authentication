@@ -2,7 +2,7 @@ import React from 'react';
 import  { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { withFirebase } from '../Firebase';
+
 import { withAuthorization } from '../Session';
 
 
@@ -16,8 +16,7 @@ const HomeBase = () => (
 
 const Home = compose(
     withRouter,
-    withFirebase,
-    withAuthorization,
+    withAuthorization
 )(HomeBase);
 
 export default Home;

@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { SignUpLink } from '../SignUp';
 import { PasswordForgetLink } from '../PasswordForget';
-import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../Constants/routes';
 import { useForm } from '../../Hooks';
+import { FirebaseContext } from '../Firebase';
 
 
 const SignInPage = () => (
@@ -19,15 +19,16 @@ const SignInPage = () => (
 );
 
 
-const SignInFormBase = (props) => {
+const SignInFormBase = ({ history }) => {
     const [formData, dispatch, reset] = useForm(initialForm);
+    const firebase = useContext(FirebaseContext);
 
     function handleSubmit(event){
         const { email, password } = formData;
-        props.firebase.doSignInWithEmailAndPassword(email, password)
+        firebase.doSignInWithEmailAndPassword(email, password)
         .then(()=>{
             reset();
-            props.history.push(ROUTES.HOME);
+            history.push(ROUTES.HOME);
         })
         .catch(error => {
             dispatch({ error });
@@ -76,8 +77,7 @@ const SignInLink = () => (
 
 
 const SignInForm = compose(
-    withRouter,
-    withFirebase
+    withRouter
 )(SignInFormBase);
 
 
