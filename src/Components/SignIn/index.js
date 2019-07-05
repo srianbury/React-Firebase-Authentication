@@ -14,6 +14,7 @@ const SignInPage = () => (
         <h1>Sign In</h1>
         <SignInForm />
         <SignInGoogle />
+        <SignInFacebook />
         <PasswordForgetLink />
         <SignUpLink />
     </div>
@@ -106,6 +107,46 @@ const SignInGoogleBase = ({ history }) => {
 }
 
 
+const SignInFacebookBase = ({ history }) => {
+    const [error, setError] = useState(null);
+    const firebase = useContext(FirebaseContext);
+
+    function onSubmit(){
+        firebase
+            .doSignInWithFacebook()
+            .then(socialAuthUser => {
+                // create new user in db on first login 
+                if(socialAuthUser.additionalUserInfo.isNewUser){
+                    return firebase
+                        .user(socialAuthUser.user.uid)
+                        .set({
+                            username: socialAuthUser.additionalUserInfo.profile.name,
+                            email: socialAuthUser.additionalUserInfo.profile.email,
+                            roles: {}
+                        });
+                }
+            })
+            .then(() => {
+                setError(null);
+                history.push(ROUTES.HOME);
+            })
+            .catch(error => {
+                setError(error);
+            });
+    }
+
+    return(
+        <div>
+            {error && <p>{error.message}</p>}
+            <button
+                onClick={onSubmit}>
+                Sign In with Facebook
+            </button>
+        </div>
+    );
+}
+
+
 const SignInLink = () => (
     <p>
         Already have an account? <Link to={ROUTES.SIGN_IN}>Sign In</Link>
@@ -119,7 +160,11 @@ const SignInForm = compose(
 
 const SignInGoogle = compose(
     withRouter,
-  )(SignInGoogleBase);
+)(SignInGoogleBase);
+
+const SignInFacebook = compose(
+    withRouter,
+)(SignInFacebookBase);
 
 
 export default SignInPage;
