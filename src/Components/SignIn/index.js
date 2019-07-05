@@ -83,7 +83,7 @@ const SignInGoogleBase = ({ history }) => {
                         username: socialAuthUser.user.displayName,
                         email: socialAuthUser.user.email,
                         roles: {}
-                    });
+                    }, { merge: true });
                 }
             })
             .then(() => {
@@ -123,7 +123,7 @@ const SignInFacebookBase = ({ history }) => {
                             username: socialAuthUser.additionalUserInfo.profile.name,
                             email: socialAuthUser.additionalUserInfo.profile.email,
                             roles: {}
-                        });
+                        }, { merge: true });
                 }
             })
             .then(() => {

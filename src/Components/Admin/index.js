@@ -14,19 +14,22 @@ const AdminPage = () => {
             loading: true
         });
 
-        firebase.users().on('value', snapshot => {
-            const usersObject = snapshot.val();
-            const usersList = Object.keys(usersObject).map(key => ({
-                ...usersObject[key], uid: key
-            }));
-            dispatch({
-                loading: false,
-                users: usersList
-            })
-        });
+        const unlisten = firebase
+            .users()
+            .onSnapshot(snapshot => {
+                let users = [];
+                snapshot.forEach(doc => 
+                    users.push({ ...doc.data, uid: doc.id })
+                );
+
+                dispatch({
+                    users,
+                    loading: false
+                });
+            });
         
         return () => {
-            firebase.users().off();
+            unlisten();
         }
     // one timer render, no props needed
     // eslint-disable-next-line

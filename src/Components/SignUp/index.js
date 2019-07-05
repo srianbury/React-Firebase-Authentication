@@ -25,23 +25,29 @@ const SignUpFormBase = ({ history }) => {
     function handleSubmit(){
         const { username, email, passwordOne } = formData;
         const roles = { [ROLES.ADMIN]: false };
-        firebase.doCreateUserWithEmailAndPassword(email, passwordOne)
-        .then(authUser => {
-            return firebase
-            .user(authUser.user.uid)
-            .set({
-                username,
-                email,
-                roles
+        firebase
+            .doCreateUserWithEmailAndPassword(email, passwordOne)
+            .then(authUser => {
+                return firebase
+                .user(authUser.user.uid)
+                .set(
+                    {
+                        username,
+                        email,
+                        roles
+                    }, 
+                    {
+                        merge: true
+                    }
+                );
+            })
+            .then(()=>{
+                reset();
+                history.push(ROUTES.HOME);
+            })
+            .catch(error=>{
+                dispatch({ error });
             });
-        })
-        .then(()=>{
-            reset();
-            history.push(ROUTES.HOME);
-        })
-        .catch(error=>{
-            dispatch({ error });
-        });
     }
 
     return(
