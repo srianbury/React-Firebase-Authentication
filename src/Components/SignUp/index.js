@@ -4,6 +4,7 @@ import { compose } from 'recompose';
 
 import { SignInLink } from '../SignIn';
 import * as ROUTES from '../../Constants/routes';
+import * as ROLES from '../../Constants/roles';
 import { useForm } from '../../Hooks';
 import { FirebaseContext } from '../Firebase';
 
@@ -23,13 +24,15 @@ const SignUpFormBase = ({ history }) => {
 
     function handleSubmit(){
         const { username, email, passwordOne } = formData;
+        const roles = { [ROLES.ADMIN]: false };
         firebase.doCreateUserWithEmailAndPassword(email, passwordOne)
         .then(authUser => {
             return firebase
             .user(authUser.user.uid)
             .set({
                 username,
-                email
+                email,
+                roles
             });
         })
         .then(()=>{

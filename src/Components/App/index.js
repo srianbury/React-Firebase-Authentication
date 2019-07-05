@@ -47,13 +47,36 @@ const App = () => {
 
     useEffect(()=>{
         const unlisten = firebase.auth.onAuthStateChanged(authUser => {
-            authUser ? setAuthUser(authUser) : setAuthUser(null);
+            if(authUser){
+                firebase
+                    .user(authUser.uid)
+                    .once('value')
+                    .then(snapshot => {
+                        const dbUser = snapshot.val();
+
+                        if(!dbUser.roles){
+                            dbUser.roles = {};
+                        }
+
+                        authUser = {
+                            uid: authUser.uid,
+                            email: authUser.email,
+                            ...dbUser
+                        };
+
+                        setAuthUser(authUser);
+                    });
+            } else {
+                setAuthUser(null);
+            }
         });
 
         return () => {
             unlisten();
         }
-    });
+    // one one render so no dependency props
+    // eslint-disable-next-line
+    }, []);
 
     return(
         <AuthUserContext.Provider value={authUser}>

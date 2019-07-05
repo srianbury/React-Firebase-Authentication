@@ -1,6 +1,8 @@
 import React, { useReducer, useEffect, useContext } from 'react';
 
 import { FirebaseContext } from '../Firebase';
+import { withAuthorization } from '../Session';
+import * as ROLES from '../../Constants/roles';
 
 
 const AdminPage = () => {
@@ -65,4 +67,8 @@ const UserList = ({ users, }) => (
     </ul>
 );
 
-export default AdminPage;
+const condition = authUser => {
+    return authUser && !!authUser.roles[ROLES.ADMIN];
+}
+
+export default withAuthorization(condition)(AdminPage);
