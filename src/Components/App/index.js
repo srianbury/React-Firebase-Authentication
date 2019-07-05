@@ -46,30 +46,14 @@ const App = () => {
     const firebase = useContext(FirebaseContext);
 
     useEffect(()=>{
-        const unlisten = firebase.auth.onAuthStateChanged(authUser => {
-            if(authUser){
-                firebase
-                    .user(authUser.uid)
-                    .once('value')
-                    .then(snapshot => {
-                        const dbUser = snapshot.val();
-
-                        if(!dbUser.roles){
-                            dbUser.roles = {};
-                        }
-
-                        authUser = {
-                            uid: authUser.uid,
-                            email: authUser.email,
-                            ...dbUser
-                        };
-
-                        setAuthUser(authUser);
-                    });
-            } else {
+        const unlisten = firebase.onAuthUserListener(
+            authUser => {
+                setAuthUser(authUser);
+            },
+            () => {
                 setAuthUser(null);
             }
-        });
+        );
 
         return () => {
             unlisten();

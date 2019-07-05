@@ -57,7 +57,7 @@ class Firebase {
                             dbUser.roles = {};
                         }
 
-                        // merge auth and db user
+                        // merge uid and email from authUser with dbUser
                         authUser = {
                             uid: authUser.uid,
                             email: authUser.email,

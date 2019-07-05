@@ -10,32 +10,9 @@ const withAuthorization = condition => Component => ({ history, ...rest }) => {
     const authUser = useContext(AuthUserContext);
 
     useEffect(() => {
-        const listener = firebase.auth.onAuthStateChanged(
+        const listener = firebase.onAuthUserListener(
             authUser => {
-                if (authUser) {
-                    firebase
-                        .user(authUser.uid)
-                        .once('value')
-                        .then(snapshot => {
-                            const dbUser = snapshot.val();
-
-                            // default empty roles
-                            if (!dbUser.roles) {
-                                dbUser.roles = {};
-                            }
-
-                            // merge auth and db user
-                            authUser = {
-                                uid: authUser.uid,
-                                email: authUser.email,
-                                ...dbUser,
-                            };
-
-                            if (!condition(authUser)) {
-                                history.push(ROUTES.SIGN_IN);
-                            }
-                        });
-                } else {
+                if(!condition(authUser)){
                     history.push(ROUTES.SIGN_IN);
                 }
             },
