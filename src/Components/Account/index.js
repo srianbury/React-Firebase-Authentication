@@ -11,7 +11,7 @@ const AccountPageBase = () => {
     const authUser = useContext(AuthUserContext);
     return(
         <div>
-            <h1>Account Page {authUser.email}</h1>
+            <h1>Account Page {authUser.username}</h1>
             <PasswordForgetForm />  
             <PasswordChangeForm />
         </div>
