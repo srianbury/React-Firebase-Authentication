@@ -14,6 +14,7 @@ import HomePage from '../Home';
 import AccountPage from '../Account';
 import AdminPage from '../Admin';
 import NoMatch from '../404';
+import UserPage from '../Users';
 
 import * as ROUTES from '../../Constants/routes';
 import { FirebaseContext } from '../Firebase';
@@ -34,6 +35,7 @@ const AppBase = () => {
                 <Route path={ROUTES.HOME} component={HomePage} />
                 <Route path={ROUTES.ACCOUNT} component={AccountPage} />
                 <Route path={ROUTES.ADMIN} component={AdminPage} />
+                <Route path={ROUTES.USER} component={UserPage} />
                 <Route component={NoMatch} />
             </Switch>
         </Router>
