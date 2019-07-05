@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
@@ -13,6 +13,7 @@ const SignInPage = () => (
     <div>
         <h1>Sign In</h1>
         <SignInForm />
+        <SignInGoogle />
         <PasswordForgetLink />
         <SignUpLink />
     </div>
@@ -65,6 +66,46 @@ const initialForm = {
 };
 
 
+const SignInGoogleBase = ({ history }) => {
+    const [error, setError] = useState(null);
+    const firebase = useContext(FirebaseContext);
+
+    function onSubmit(){
+        firebase
+            .doSignInWithGoogle()
+            .then(socialAuthUser => {
+                // create new user in db on first login 
+                if(socialAuthUser.additionalUserInfo.isNewUser){
+                    return firebase
+                    .user(socialAuthUser.user.uid)
+                    .set({
+                        username: socialAuthUser.user.displayName,
+                        email: socialAuthUser.user.email,
+                        roles: {}
+                    });
+                }
+            })
+            .then(() => {
+                setError(null);
+                history.push(ROUTES.HOME);
+            })
+            .catch(error => {
+                setError(error);
+            });
+    }
+
+    return(
+        <div>
+            {error && <p>{error.message}</p>}
+            <button
+                onClick={onSubmit}>
+                Sign In with Google
+            </button>
+        </div>
+    );
+}
+
+
 const SignInLink = () => (
     <p>
         Already have an account? <Link to={ROUTES.SIGN_IN}>Sign In</Link>
@@ -76,6 +117,10 @@ const SignInForm = compose(
     withRouter
 )(SignInFormBase);
 
+const SignInGoogle = compose(
+    withRouter,
+  )(SignInGoogleBase);
+
 
 export default SignInPage;
-export { SignInForm, SignInLink };
+export { SignInForm, SignInLink, SignInGoogle };
