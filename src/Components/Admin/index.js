@@ -19,9 +19,9 @@ const AdminPage = () => {
             .onSnapshot(snapshot => {
                 let users = [];
                 snapshot.forEach(doc => 
-                    users.push({ ...doc.data, uid: doc.id })
+                    users.push({ ...doc.data(), uid: doc.id })
                 );
-
+                
                 dispatch({
                     users,
                     loading: false
@@ -52,7 +52,7 @@ function reducer(state, newState){
 }
 
 
-const UserList = ({ users, }) => (
+const UserList = ({ users }) => (
     <ul>
         {users.map(user => (
             <li key={user.uid}>
