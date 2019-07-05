@@ -42,15 +42,17 @@ const AppBase = () => {
 
 
 const App = () => {
-    const [authUser, setAuthUser] = useState(null);
+    const [authUser, setAuthUser] = useState(JSON.parse(localStorage.getItem('iaiAuthUser')));
     const firebase = useContext(FirebaseContext);
 
     useEffect(()=>{
         const unlisten = firebase.onAuthUserListener(
             authUser => {
+                localStorage.setItem('iaiAuthUser', JSON.stringify(authUser));
                 setAuthUser(authUser);
             },
             () => {
+                localStorage.removeItem('iaiAuthUser');
                 setAuthUser(null);
             }
         );
