@@ -1,5 +1,6 @@
 import React from 'react';
 
+// initialForm: object
 const useForm = initialForm => {
     const [formData, dispatch] = React.useReducer(formReducer, initialForm);
     const reset = () => {
@@ -15,4 +16,4 @@ function formReducer(state, newState){
     return { ...state, ...newState };
 }
 
-export default useForm;
+export default useForm;  
