@@ -14,7 +14,7 @@ const PasswordForgetPage = () => (
 
 
 const PasswordForgetFormBase = () => {
-    const [formData, dispatch, handleChange, reset] = useForm(initialForm);
+    const [formData, handleInputChange, handleChange, reset] = useForm(initialForm);
     const firebase = useContext(FirebaseContext);
 
     function handleSubmit(){
@@ -24,17 +24,17 @@ const PasswordForgetFormBase = () => {
             reset();
         })
         .catch(error=>{
-            dispatch({ error });
+            handleChange({ error });
         });
     }
 
     return(
         <div>
-            {formData.error && <p>formData.error.message</p>}
+            {formData.error && <p>{formData.error.message}</p>}
             <input 
                 name='email'
                 value={formData.email}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 type='text'
                 placeholder='Email Address' />
             <button

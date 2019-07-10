@@ -22,7 +22,7 @@ const SignInPage = () => (
 
 
 const SignInFormBase = ({ history }) => {
-    const [formData, dispatch, handleChange, reset] = useForm(initialForm);
+    const [formData, handleInputChange, handleChange, reset] = useForm(initialForm);
     const firebase = useContext(FirebaseContext);
 
     function handleSubmit(){
@@ -33,7 +33,7 @@ const SignInFormBase = ({ history }) => {
             history.push(ROUTES.HOME);
         })
         .catch(error => {
-            dispatch({ error });
+            handleChange({ error });
         });
     }
 
@@ -43,13 +43,13 @@ const SignInFormBase = ({ history }) => {
             <input
                 name='email'
                 value={formData.email}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 type='text'
                 placeholder='Email Address' />
             <input
                 name='password'
                 value={formData.password}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 type='password'
                 placeholder='Password' />
             <button

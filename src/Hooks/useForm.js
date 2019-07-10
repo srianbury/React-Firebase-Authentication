@@ -4,16 +4,39 @@ import React from 'react';
 const useForm = initialForm => {
     const [formData, dispatch] = React.useReducer(formReducer, initialForm);
     const reset = () => {
-        dispatch(initialForm);
+        dispatch({
+            type: 'RESET',
+            payload: initialForm
+        });
     }
-    const handleChange = (event) => {
-        dispatch({ [event.target.name]:event.target.value });
+    const handleChange = (payload) => {
+        dispatch({
+            type: 'UPDATE',
+            payload
+        });
     }
-    return [formData, dispatch, handleChange, reset];
+
+    const handleInputChange = (event) => {
+        dispatch({
+            type: 'UPDATE',
+            payload: {
+                [event.target.name]: event.target.value
+            }
+        });
+    }
+    return [formData, handleInputChange, handleChange, reset];
 }
 
-function formReducer(state, newState){
-    return { ...state, ...newState };
+function formReducer(state, action){
+    switch(action.type){
+        case 'UPDATE':
+            return { ...state, ...action.payload };
+        case 'RESET':
+            return action.payload;
+        default:
+            return state;
+    }
+    
 }
 
 export default useForm;  

@@ -19,7 +19,7 @@ const SignUpPage = () => (
 
 
 const SignUpFormBase = ({ history }) => {
-    const [formData, dispatch, handleChange, reset] = useForm(initialForm);
+    const [formData, handleInputChange, handleChange, reset] = useForm(initialForm);
     const firebase = useContext(FirebaseContext);    
 
     function handleSubmit(){
@@ -46,7 +46,7 @@ const SignUpFormBase = ({ history }) => {
                 history.push(ROUTES.HOME);
             })
             .catch(error=>{
-                dispatch({ error });
+                handleChange({ error });
             });
     }
 
@@ -56,25 +56,25 @@ const SignUpFormBase = ({ history }) => {
             <input 
                 name='username'
                 value={formData.username}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 type='text'
                 placeholder='Username' />
             <input 
                 name='email'
                 value={formData.email}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 type='text'
                 placeholder='Email Address' />
             <input 
                 name='passwordOne'
                 value={formData.passwordOne}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 type='password'
                 placeholder='Password' />
             <input 
                 name='passwordTwo'
                 value={formData.passwordTwo}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 type='password'
                 placeholder='Confirm Password' />
             <button

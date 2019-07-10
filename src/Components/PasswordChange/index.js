@@ -5,7 +5,7 @@ import { FirebaseContext } from '../Firebase';
 
 
 const PasswordChangeForm = () => {
-    const [formData, dispatch, handleChange, reset] = useForm(initialForm);
+    const [formData, handleInputChange, handleChange, reset] = useForm(initialForm);
     const firebase = useContext(FirebaseContext);
 
     function handleSubmit(){
@@ -17,7 +17,7 @@ const PasswordChangeForm = () => {
                 reset();
             })
             .catch(error => {
-                dispatch({ error });
+                handleChange({ error });
             });    
     };
 
@@ -27,13 +27,13 @@ const PasswordChangeForm = () => {
             <input
                 name="passwordOne"
                 value={formData.passwordOne}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 type="password"
                 placeholder="New Password" />
             <input
                 name="passwordTwo"
                 value={formData.passwordTwo}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 type="password"
                 placeholder="Confirm New Password" />
             <button 
