@@ -1,12 +1,7 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import { mount, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 
 import { useForm } from '../Hooks';
-
-
-configure({ adapter: new Adapter() });
 
 
 describe('Use Form (No Error Key in Initial Form)', ()=>{
