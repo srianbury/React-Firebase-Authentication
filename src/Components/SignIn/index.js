@@ -25,16 +25,15 @@ const SignInFormBase = ({ history }) => {
     const [formData, handleInputChange, handleChange, reset] = useForm(initialForm);
     const firebase = useContext(FirebaseContext);
 
-    function handleSubmit(){
+    async function handleSubmit(){
         const { email, password } = formData;
-        firebase.doSignInWithEmailAndPassword(email, password)
-        .then(()=>{
+        try{
+            await firebase.doSignInWithEmailAndPassword(email, password);
             reset();
-            history.push(ROUTES.HOME);
-        })
-        .catch(error => {
+            history.push(ROUTES.HOME);         
+        } catch(error){
             handleChange({ error });
-        });
+        }
     }
 
     return(
@@ -71,28 +70,23 @@ const SignInGoogleBase = ({ history }) => {
     const [error, setError] = useState(null);
     const firebase = useContext(FirebaseContext);
 
-    function onSubmit(){
-        firebase
-            .doSignInWithGoogle()
-            .then(socialAuthUser => {
-                // create new user in db on first login 
-                if(socialAuthUser.additionalUserInfo.isNewUser){
-                    return firebase
-                    .user(socialAuthUser.user.uid)
-                    .set({
-                        username: socialAuthUser.user.displayName,
-                        email: socialAuthUser.user.email,
-                        roles: {}
-                    }, { merge: true });
-                }
-            })
-            .then(() => {
-                setError(null);
-                history.push(ROUTES.HOME);
-            })
-            .catch(error => {
-                setError(error);
-            });
+    async function onSubmit(){
+        try{
+            const googleAuthUser = await firebase.doSignInWithGoogle();
+            if(googleAuthUser.additionalUserInfo.isNewUser){
+                return firebase
+                        .user(googleAuthUser.user.uid)
+                        .set({
+                            username: googleAuthUser.user.displayName,
+                            email: googleAuthUser.user.email,
+                            roles: {}
+                        }, { merge: true });
+            }
+            setError(null);
+            history.push(ROUTES.HOME);
+        } catch(error){
+            setError(error);
+        }
     }
 
     return(

@@ -52,28 +52,36 @@ class Firebase {
         this.db.collection('users');
 
     /* Merge Auth and DB User*/
-    onAuthUserListener = (next, fallback) =>
-        this.auth.onAuthStateChanged(authUser => {
+    onAuthUserListener = (next, fallback) => 
+        this.auth.onAuthStateChanged(async authUser => {
             if (authUser) {
-                this.user(authUser.uid)
-                    .get()
-                    .then(snapshot => {
-                        const dbUser = snapshot.data();
+                try{
+                    const snapshot = await this.user(authUser.uid).get();
+                    const dbUser = snapshot.data();
+                    
+                    // let fix this issue after we find a nice way to handle the error.
+                    // i.e. display a message to the user
+                    if(!dbUser){
+                        console.log(authUser);
+                    } 
 
-                        // default empty roles
-                        if (!dbUser.roles) {
-                            dbUser.roles = {};
-                        }
+                    if (!dbUser.roles) {
+                        dbUser.roles = {};  // default empty rolesz
+                    }
 
-                        // merge uid and email from authUser with dbUser
-                        authUser = {
-                            uid: authUser.uid,
-                            email: authUser.email,
-                            ...dbUser,
-                        };
+                    // merge uid and email from authUser with dbUser
+                    authUser = {
+                        uid: authUser.uid,
+                        email: authUser.email,
+                        ...dbUser,
+                    };
+                    next(authUser);
 
-                        next(authUser);
-                    });
+                } catch(error){
+                    // this flow is kind of okay but it doesn't show an error message to the user
+                    // would be nice to tell them it failed rather than just redirecting 
+                    console.log(error);
+                }
             } else {
                 fallback();
             }
